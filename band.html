@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>밴드 합주 일정 조율 (Band Practice Scheduler)</title>
   
-  <!-- Apple iOS Font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 
   <style>
@@ -15,7 +14,6 @@
       --ios-blue: #007aff;
       --ios-green: #34c759;
       --ios-red: #ff3b30;
-      --ios-orange: #ff9500;
       --ios-gray: #8e8e93;
       --ios-light-gray: #e5e5ea;
       --ios-secondary-bg: #f8f8fb;
@@ -24,15 +22,12 @@
       --ios-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--ios-bg);
       color: #000;
       line-height: 1.4;
@@ -69,15 +64,11 @@
     }
 
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 32px; height: 32px;
       background: linear-gradient(135deg, #007aff, #5856d6);
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 18px;
     }
 
     .room-badge {
@@ -87,9 +78,6 @@
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .container {
@@ -125,21 +113,26 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     .lobby-btn-card {
       background: var(--ios-card);
       border: 2px solid var(--ios-border);
       border-radius: 16px;
-      padding: 24px 16px;
+      padding: 20px 14px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .lobby-btn-card.active-card {
+      border-color: var(--ios-blue);
+      background: #f0f7ff;
     }
 
     .lobby-btn-card:active {
@@ -147,15 +140,12 @@
     }
 
     .lobby-icon {
-      width: 52px;
-      height: 52px;
+      width: 48px; height: 48px;
       border-radius: 50%;
       background: #e5f1ff;
       color: var(--ios-blue);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
     }
 
     label {
@@ -165,7 +155,6 @@
       margin-bottom: 6px;
       display: block;
       text-transform: uppercase;
-      letter-spacing: 0.2px;
     }
 
     input, select, textarea {
@@ -177,7 +166,6 @@
       font-family: inherit;
       background: var(--ios-secondary-bg);
       outline: none;
-      transition: border 0.2s;
       margin-bottom: 14px;
     }
 
@@ -191,9 +179,7 @@
       gap: 10px;
     }
 
-    .form-row > div {
-      flex: 1;
-    }
+    .form-row > div { flex: 1; }
 
     .ios-btn {
       width: 100%;
@@ -205,16 +191,9 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    .ios-btn:active {
-      opacity: 0.8;
-    }
+    .ios-btn:active { opacity: 0.8; }
 
     .ios-btn-secondary {
       background: #e5e5ea;
@@ -239,7 +218,6 @@
       border-radius: 7px;
       cursor: pointer;
       color: #000;
-      transition: all 0.2s;
     }
 
     .segment-btn.active {
@@ -268,39 +246,17 @@
       min-width: 48px;
       height: 38px;
       user-select: none;
-      -webkit-user-select: none;
     }
 
-    table.time-grid th {
-      background: #f8f8fb;
-      font-weight: 600;
-      vertical-align: middle;
-    }
+    table.time-grid th { background: #f8f8fb; font-weight: 600; }
 
-    .date-num {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1c1c1e;
-    }
-
-    .day-str {
-      font-size: 11px;
-      color: var(--ios-gray);
-      margin-top: 2px;
-    }
-
+    .date-num { font-size: 13px; font-weight: 700; color: #1c1c1e; }
+    .day-str { font-size: 11px; color: var(--ios-gray); margin-top: 2px; }
     .day-sat { color: var(--ios-blue) !important; }
     .day-sun { color: var(--ios-red) !important; }
 
-    .slot-cell {
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .slot-cell.selected {
-      background-color: var(--ios-blue) !important;
-      color: white;
-    }
+    .slot-cell { cursor: pointer; }
+    .slot-cell.selected { background-color: var(--ios-blue) !important; color: white; }
 
     .vote-card {
       background: #f8f8fb;
@@ -313,22 +269,8 @@
       border: 1px solid var(--ios-border);
     }
 
-    .vote-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .vote-time {
-      font-weight: 700;
-      font-size: 15px;
-      color: #1c1c1e;
-    }
-
-    .vote-meta {
-      font-size: 12px;
-      color: var(--ios-gray);
-    }
+    .vote-time { font-weight: 700; font-size: 15px; color: #1c1c1e; }
+    .vote-meta { font-size: 12px; color: var(--ios-gray); }
 
     .vote-btn {
       background: #fff;
@@ -339,10 +281,6 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: all 0.2s;
     }
 
     .badge-session {
@@ -386,18 +324,19 @@
       <div class="ios-sub">팀원들과 원활하게 합주 가능 시간을 맞추고 최적의 시간을 투표하세요.</div>
 
       <div class="lobby-options">
-        <div class="lobby-btn-card" onclick="showLobbyMode('create')">
+        <div class="lobby-btn-card" id="btn-card-create" onclick="showLobbyMode('create')">
           <div class="lobby-icon">➕</div>
           <div style="font-weight:700;">방 만들기</div>
           <div style="font-size:12px; color:var(--ios-gray);">새 합주 일정 만들기</div>
         </div>
-        <div class="lobby-btn-card" onclick="showLobbyMode('join')">
+        <div class="lobby-btn-card" id="btn-card-join" onclick="showLobbyMode('join')">
           <div class="lobby-icon">🔑</div>
           <div style="font-weight:700;">입장하기</div>
           <div style="font-size:12px; color:var(--ios-gray);">코드 입력하기</div>
         </div>
       </div>
 
+      <!-- 방 만들기 폼 -->
       <div id="form-create" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
         <label>밴드 / 방 이름</label>
         <input type="text" id="create-title" placeholder="예: 스프링 밴드 합주" value="스프링 밴드 합주">
@@ -416,6 +355,7 @@
         <button class="ios-btn" onclick="createRoomAction()">합주방 생성 및 입장</button>
       </div>
 
+      <!-- 코드 입력 폼 -->
       <div id="form-join" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
         <label>6자리 방 코드</label>
         <input type="text" id="join-code-input" placeholder="예: BAND01" style="text-transform:uppercase; font-size:18px; letter-spacing:2px; font-weight:700;">
@@ -464,7 +404,7 @@
 
         <div id="input-mode-grid">
           <div style="font-size:12px; color:var(--ios-blue); font-weight:600; margin-bottom:8px;">
-            💡 같은 날짜 열(세로)에서 누른 상태로 쓱 문지르거나, 시작 시간과 끝 시간을 터치하면 세로로 연결됩니다.
+            💡 같은 날짜 열(세로)에서 누른 상태로 쓱 문지르거나 터치하여 선택할 수 있습니다.
           </div>
           <div class="grid-container">
             <table class="time-grid" id="selection-grid">
@@ -514,7 +454,6 @@
     let selectedSlots = new Set();
     let isMouseDown = false;
     let dragModeSelect = true;
-    let rangeStartSlot = null;
 
     const START_HOUR = 0;
     const END_HOUR = 24;
@@ -526,6 +465,9 @@
 
       document.getElementById('create-start-date').value = formatDateStr(today);
       document.getElementById('create-end-date').value = formatDateStr(nextWeek);
+
+      // 기본적으로 '방 만들기' 폼을 열어둠
+      showLobbyMode('create');
 
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
@@ -544,8 +486,16 @@
     function showLobbyMode(mode) {
       document.getElementById('form-create').classList.add('hidden');
       document.getElementById('form-join').classList.add('hidden');
-      if (mode === 'create') document.getElementById('form-create').classList.remove('hidden');
-      if (mode === 'join') document.getElementById('form-join').classList.remove('hidden');
+      document.getElementById('btn-card-create').classList.remove('active-card');
+      document.getElementById('btn-card-join').classList.remove('active-card');
+
+      if (mode === 'create') {
+        document.getElementById('form-create').classList.remove('hidden');
+        document.getElementById('btn-card-create').classList.add('active-card');
+      } else if (mode === 'join') {
+        document.getElementById('form-join').classList.remove('hidden');
+        document.getElementById('btn-card-join').classList.add('active-card');
+      }
     }
 
     function goLobby() {
@@ -661,8 +611,6 @@
           const isSelected = selectedSlots.has(slotId);
 
           bHtml += `<td class="slot-cell ${isSelected ? 'selected' : ''}" 
-                        data-date="${dateKey}"
-                        data-hour="${h}"
                         onmousedown="onSlotMouseDown('${dateKey}', ${h})"
                         onmouseenter="onSlotMouseEnter('${dateKey}', ${h})"
                         onclick="onSlotClick('${dateKey}', ${h})">-</td>`;
@@ -699,19 +647,12 @@
 
     function onSlotClick(dateKey, hour) {
       const slotId = `${dateKey}_${hour}`;
-
-      if (rangeStartSlot === null || rangeStartSlot.dateKey !== dateKey) {
-        rangeStartSlot = { dateKey, hour };
+      if (selectedSlots.has(slotId)) {
+        selectedSlots.delete(slotId);
       } else {
-        const minH = Math.min(rangeStartSlot.hour, hour);
-        const maxH = Math.max(rangeStartSlot.hour, hour);
-
-        for (let h = minH; h <= maxH; h++) {
-          selectedSlots.add(`${dateKey}_${h}`);
-        }
-        rangeStartSlot = null;
-        renderSelectionGrid();
+        selectedSlots.add(slotId);
       }
+      renderSelectionGrid();
     }
 
     function switchInputMode(mode) {
@@ -721,7 +662,6 @@
       document.getElementById('input-mode-text').classList.toggle('hidden', mode !== 'text');
     }
 
-    // 텍스트 파싱 처리 알고리즘
     function parseTextToGrid() {
       const text = document.getElementById('text-schedule-input').value;
       const lines = text.split('\n');
@@ -744,7 +684,6 @@
         const dateKey = formatDateStr(targetDateObj);
         appliedCount++;
 
-        // 1) 23: o (전체 가능)
         if (/^(o|O|전체|가능)$/i.test(ruleStr)) {
           for (let h = START_HOUR; h < END_HOUR; h++) {
             selectedSlots.add(`${dateKey}_${h}`);
@@ -752,7 +691,6 @@
           return;
         }
 
-        // 2) 13~15 x (특정 시간대 제외)
         const isExclusion = ruleStr.includes('x') || ruleStr.includes('제외') || ruleStr.includes('안됨');
         if (isExclusion) {
           for (let h = START_HOUR; h < END_HOUR; h++) {
@@ -769,26 +707,22 @@
           return;
         }
 
-        // 3) ~11, 12~13, 17~ (복합 시간 구문)
         const tokens = ruleStr.split(/[\s,]+/);
         tokens.forEach(token => {
           if (!token) return;
 
-          // ~11
           if (/^[~\-]\d{1,2}$/.test(token)) {
             const endH = parseInt(token.replace(/[~\-]/, ''));
             for (let h = START_HOUR; h < endH; h++) {
               selectedSlots.add(`${dateKey}_${h}`);
             }
           }
-          // 17~
           else if (/^\d{1,2}[~\-]$/.test(token)) {
             const startH = parseInt(token.replace(/[~\-]/, ''));
             for (let h = startH; h < END_HOUR; h++) {
               selectedSlots.add(`${dateKey}_${h}`);
             }
           }
-          // 12~13
           else if (/^\d{1,2}[~\-]\d{1,2}$/.test(token)) {
             const parts = token.split(/[~\-]/);
             const startH = parseInt(parts[0]);
@@ -884,7 +818,6 @@
         });
         bHtml += `</tr>`;
       }
-      bHtml += '';
       hBodyRows.innerHTML = bHtml;
 
       const candidateContainer = document.getElementById('candidate-vote-list');
