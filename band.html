@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>밴드 합주 일정 조율 (Band Practice Scheduler)</title>
   
+  <!-- Apple iOS Font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 
   <style>
@@ -14,6 +15,7 @@
       --ios-blue: #007aff;
       --ios-green: #34c759;
       --ios-red: #ff3b30;
+      --ios-orange: #ff9500;
       --ios-gray: #8e8e93;
       --ios-light-gray: #e5e5ea;
       --ios-secondary-bg: #f8f8fb;
@@ -22,17 +24,22 @@
       --ios-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--ios-bg);
       color: #000;
+      line-height: 1.4;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
       padding-bottom: 40px;
     }
 
@@ -43,6 +50,7 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       padding: 12px 20px;
       display: flex;
@@ -56,19 +64,37 @@
       gap: 10px;
       font-weight: 700;
       font-size: 18px;
+      color: #1c1c1e;
+      cursor: pointer;
     }
 
     .brand-icon {
-      width: 32px; height: 32px;
+      width: 32px;
+      height: 32px;
       background: linear-gradient(135deg, #007aff, #5856d6);
       border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
+      font-size: 18px;
+    }
+
+    .room-badge {
+      background: #e5f1ff;
+      color: var(--ios-blue);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .container {
       width: 100%;
-      max-width: 600px;
+      max-width: 680px;
       padding: 16px;
     }
 
@@ -81,19 +107,92 @@
       border: 1px solid var(--ios-border);
     }
 
-    .ios-title { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
-    .ios-sub { color: var(--ios-gray); font-size: 13px; margin-bottom: 16px; }
+    .ios-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 8px;
+      letter-spacing: -0.4px;
+    }
 
-    label { font-size: 12px; font-weight: 600; color: var(--ios-gray); margin-bottom: 6px; display: block; }
+    .ios-sub {
+      color: var(--ios-gray);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .lobby-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .lobby-btn-card {
+      background: var(--ios-card);
+      border: 2px solid var(--ios-border);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lobby-btn-card:active {
+      transform: scale(0.97);
+    }
+
+    .lobby-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #e5f1ff;
+      color: var(--ios-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ios-gray);
+      margin-bottom: 6px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
     input, select, textarea {
       width: 100%;
-      padding: 12px;
+      padding: 12px 14px;
       border: 1px solid var(--ios-border);
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 15px;
+      font-family: inherit;
       background: var(--ios-secondary-bg);
-      margin-bottom: 12px;
       outline: none;
+      transition: border 0.2s;
+      margin-bottom: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--ios-blue);
+      background: #fff;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-row > div {
+      flex: 1;
     }
 
     .ios-btn {
@@ -103,9 +202,18 @@
       border: none;
       border-radius: 12px;
       padding: 14px;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ios-btn:active {
+      opacity: 0.8;
     }
 
     .ios-btn-secondary {
@@ -113,10 +221,38 @@
       color: #000;
     }
 
+    .segmented-control {
+      display: flex;
+      background: var(--ios-light-gray);
+      padding: 3px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+    }
+
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 7px;
+      cursor: pointer;
+      color: #000;
+      transition: all 0.2s;
+    }
+
+    .segment-btn.active {
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
     .grid-container {
       overflow-x: auto;
-      border-radius: 10px;
+      max-width: 100%;
+      border-radius: 12px;
       border: 1px solid var(--ios-border);
+      background: #fff;
     }
 
     table.time-grid {
@@ -128,9 +264,37 @@
 
     table.time-grid th, table.time-grid td {
       border: 1px solid var(--ios-border);
-      padding: 6px 2px;
-      min-width: 44px;
-      height: 36px;
+      padding: 8px 4px;
+      min-width: 48px;
+      height: 38px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    table.time-grid th {
+      background: #f8f8fb;
+      font-weight: 600;
+      vertical-align: middle;
+    }
+
+    .date-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1c1c1e;
+    }
+
+    .day-str {
+      font-size: 11px;
+      color: var(--ios-gray);
+      margin-top: 2px;
+    }
+
+    .day-sat { color: var(--ios-blue) !important; }
+    .day-sun { color: var(--ios-red) !important; }
+
+    .slot-cell {
+      cursor: pointer;
+      transition: background 0.15s;
     }
 
     .slot-cell.selected {
@@ -138,92 +302,431 @@
       color: white;
     }
 
+    .vote-card {
+      background: #f8f8fb;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--ios-border);
+    }
+
+    .vote-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .vote-time {
+      font-weight: 700;
+      font-size: 15px;
+      color: #1c1c1e;
+    }
+
+    .vote-meta {
+      font-size: 12px;
+      color: var(--ios-gray);
+    }
+
+    .vote-btn {
+      background: #fff;
+      border: 1.5px solid var(--ios-blue);
+      color: var(--ios-blue);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .badge-session {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 4px;
+      background: #e5e5ea;
+      color: #3a3a3c;
+    }
+
+    .heat-0 { background: #ffffff; }
+    .heat-1 { background: #e5f1ff; }
+    .heat-2 { background: #b3d7ff; }
+    .heat-3 { background: #80bdff; }
+    .heat-4 { background: #4da3ff; }
+    .heat-5 { background: #007aff; color: white; }
+
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">
+    <div class="brand" onclick="goLobby()">
       <div class="brand-icon">🎸</div>
       <span>밴드 합주 조율</span>
+    </div>
+    <div id="header-room-info" class="hidden">
+      <span class="room-badge" id="room-code-tag">코드: -</span>
     </div>
   </header>
 
   <div class="container">
-    <div class="ios-card">
-      <h2 class="ios-title">가능 시간 텍스트 입력</h2>
-      <div class="ios-sub">요청하신 형태로 텍스트를 적어주시면 표로 자동 변환됩니다.</div>
 
-      <textarea id="text-schedule-input" rows="7" placeholder="입력 예시:
+    <!-- LOBBY VIEW (메인 화면) -->
+    <div id="view-lobby" class="ios-card">
+      <h2 class="ios-title">합주 시간 조율하기</h2>
+      <div class="ios-sub">팀원들과 원활하게 합주 가능 시간을 맞추고 최적의 시간을 투표하세요.</div>
+
+      <div class="lobby-options">
+        <div class="lobby-btn-card" onclick="showLobbyMode('create')">
+          <div class="lobby-icon">➕</div>
+          <div style="font-weight:700;">방 만들기</div>
+          <div style="font-size:12px; color:var(--ios-gray);">새 합주 일정 만들기</div>
+        </div>
+        <div class="lobby-btn-card" onclick="showLobbyMode('join')">
+          <div class="lobby-icon">🔑</div>
+          <div style="font-weight:700;">입장하기</div>
+          <div style="font-size:12px; color:var(--ios-gray);">코드 입력하기</div>
+        </div>
+      </div>
+
+      <div id="form-create" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
+        <label>밴드 / 방 이름</label>
+        <input type="text" id="create-title" placeholder="예: 스프링 밴드 합주" value="스프링 밴드 합주">
+
+        <div class="form-row">
+          <div>
+            <label>시작일</label>
+            <input type="date" id="create-start-date">
+          </div>
+          <div>
+            <label>종료일</label>
+            <input type="date" id="create-end-date">
+          </div>
+        </div>
+
+        <button class="ios-btn" onclick="createRoomAction()">합주방 생성 및 입장</button>
+      </div>
+
+      <div id="form-join" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
+        <label>6자리 방 코드</label>
+        <input type="text" id="join-code-input" placeholder="예: BAND01" style="text-transform:uppercase; font-size:18px; letter-spacing:2px; font-weight:700;">
+        <button class="ios-btn" onclick="joinRoomAction()">방으로 입장하기</button>
+      </div>
+    </div>
+
+    <!-- MAIN ROOM VIEW (입장 후 화면) -->
+    <div id="view-room" class="hidden">
+
+      <div class="ios-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2 class="ios-title" id="room-display-title" style="margin:0;">-</h2>
+          <div style="font-size:13px; color:var(--ios-gray); margin-top:4px;" id="room-display-dates">-</div>
+        </div>
+        <button class="ios-btn ios-btn-secondary" style="width:auto; padding:8px 14px; font-size:13px;" onclick="copyRoomLink()">링크 공유 🔗</button>
+      </div>
+
+      <div class="ios-card">
+        <h3 class="ios-title" style="font-size:17px;">내 가능 시간 입력</h3>
+        
+        <div class="form-row">
+          <div>
+            <label>이름</label>
+            <input type="text" id="user-name" placeholder="예: 김합주">
+          </div>
+          <div>
+            <label>파트 / 세션</label>
+            <select id="user-session">
+              <option value="보컬">보컬</option>
+              <option value="코러스">코러스</option>
+              <option value="일렉기타">일렉기타</option>
+              <option value="통기타">통기타</option>
+              <option value="베이스">베이스</option>
+              <option value="드럼">드럼</option>
+              <option value="건반">건반</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment-btn active" id="tab-btn-grid" onclick="switchInputMode('grid')">표로 고르기</button>
+          <button class="segment-btn" id="tab-btn-text" onclick="switchInputMode('text')">텍스트로 입력</button>
+        </div>
+
+        <div id="input-mode-grid">
+          <div style="font-size:12px; color:var(--ios-blue); font-weight:600; margin-bottom:8px;">
+            💡 같은 날짜 열(세로)에서 누른 상태로 쓱 문지르거나, 시작 시간과 끝 시간을 터치하면 세로로 연결됩니다.
+          </div>
+          <div class="grid-container">
+            <table class="time-grid" id="selection-grid">
+              <thead><tr id="grid-header-row"></tr></thead>
+              <tbody id="grid-body-rows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="input-mode-text" class="hidden">
+          <label>가능 시간 텍스트 입력</label>
+          <textarea id="text-schedule-input" rows="8" placeholder="입력 예시:
 23: o
 24: 13~15 x
 25: ~11 12~13 17~"></textarea>
+          <button class="ios-btn ios-btn-secondary" style="margin-bottom:12px;" onclick="parseTextToGrid()">텍스트를 표로 정확하게 반영하기</button>
+        </div>
 
-      <button class="ios-btn ios-btn-secondary" onclick="parseTextToGrid()">표에 반영하기</button>
-    </div>
-
-    <div class="ios-card">
-      <h3 class="ios-title">시간표 확인</h3>
-      <div class="grid-container">
-        <table class="time-grid">
-          <thead><tr id="grid-header-row"></tr></thead>
-          <tbody id="grid-body-rows"></tbody>
-        </table>
+        <button class="ios-btn" style="margin-top:16px;" onclick="submitMySchedule()">내 시간 저장 / 업데이트</button>
       </div>
+
+      <div class="ios-card">
+        <h3 class="ios-title" style="font-size:18px;">추천 합주 시간 & 선호도 투표</h3>
+        <div class="ios-sub">모두(또는 많은 멤버)가 가능한 시간을 계산합니다.</div>
+        <div id="candidate-vote-list"></div>
+      </div>
+
+      <div class="ios-card">
+        <h3 class="ios-title" style="font-size:18px;">전체 팀원 시간 현황표</h3>
+        <div id="submitted-members-tags" style="margin-bottom:12px;"></div>
+        
+        <div class="grid-container">
+          <table class="time-grid" id="heatmap-grid">
+            <thead><tr id="heatmap-header-row"></tr></thead>
+            <tbody id="heatmap-body-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
+
   </div>
 
   <script>
+    let currentRoomCode = "";
+    let roomData = null;
+    let selectedSlots = new Set();
+    let isMouseDown = false;
+    let dragModeSelect = true;
+    let rangeStartSlot = null;
+
     const START_HOUR = 0;
     const END_HOUR = 24;
-    let selectedSlots = new Set();
 
-    function getDates() {
-      const dates = [];
+    window.addEventListener('DOMContentLoaded', () => {
       const today = new Date();
-      for(let i=0; i<7; i++) {
-        const d = new Date();
-        d.setDate(today.getDate() + i);
-        dates.push(d);
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 13);
+
+      document.getElementById('create-start-date').value = formatDateStr(today);
+      document.getElementById('create-end-date').value = formatDateStr(nextWeek);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        joinRoomByCode(code.toUpperCase());
       }
-      return dates;
-    }
+
+      window.addEventListener('mouseup', () => { isMouseDown = false; });
+      window.addEventListener('touchend', () => { isMouseDown = false; });
+    });
 
     function formatDateStr(d) {
       return d.toISOString().split('T')[0];
     }
 
-    function renderGrid() {
-      const dates = getDates();
+    function showLobbyMode(mode) {
+      document.getElementById('form-create').classList.add('hidden');
+      document.getElementById('form-join').classList.add('hidden');
+      if (mode === 'create') document.getElementById('form-create').classList.remove('hidden');
+      if (mode === 'join') document.getElementById('form-join').classList.remove('hidden');
+    }
+
+    function goLobby() {
+      document.getElementById('view-room').classList.add('hidden');
+      document.getElementById('header-room-info').classList.add('hidden');
+      document.getElementById('view-lobby').classList.remove('hidden');
+    }
+
+    function createRoomAction() {
+      const title = document.getElementById('create-title').value.trim() || '합주 조율';
+      const startDate = document.getElementById('create-start-date').value;
+      const endDate = document.getElementById('create-end-date').value;
+
+      if (!startDate || !endDate) {
+        alert('시작일과 종료일을 지정해주세요.');
+        return;
+      }
+
+      const code = 'BAND' + Math.floor(10 + Math.random() * 90);
+
+      const newRoom = {
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        members: {},
+        votes: {}
+      };
+
+      localStorage.setItem('room_' + code, JSON.stringify(newRoom));
+      joinRoomByCode(code);
+    }
+
+    function joinRoomAction() {
+      const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+      if (!code) return alert('방 코드를 입력해주세요.');
+      joinRoomByCode(code);
+    }
+
+    function joinRoomByCode(code) {
+      currentRoomCode = code;
+      const raw = localStorage.getItem('room_' + code);
+
+      if (!raw) {
+        roomData = {
+          title: "합주 조율방 (" + code + ")",
+          startDate: formatDateStr(new Date()),
+          endDate: formatDateStr(new Date(Date.now() + 86400000 * 7)),
+          members: {},
+          votes: {}
+        };
+        localStorage.setItem('room_' + code, JSON.stringify(roomData));
+      } else {
+        roomData = JSON.parse(raw);
+      }
+
+      renderRoomView();
+    }
+
+    function renderRoomView() {
+      document.getElementById('view-lobby').classList.add('hidden');
+      document.getElementById('view-room').classList.remove('hidden');
+      document.getElementById('header-room-info').classList.remove('hidden');
+      document.getElementById('room-code-tag').innerText = `코드: ${currentRoomCode}`;
+
+      document.getElementById('room-display-title').innerText = roomData.title;
+      document.getElementById('room-display-dates').innerText = `${roomData.startDate} ~ ${roomData.endDate} (00:00 ~ 24:00)`;
+
+      renderSelectionGrid();
+      renderHeatmapAndVotes();
+    }
+
+    function getRoomDates() {
+      const dates = [];
+      let curr = new Date(roomData.startDate);
+      const end = new Date(roomData.endDate);
+      while (curr <= end) {
+        dates.push(new Date(curr));
+        curr.setDate(curr.getDate() + 1);
+      }
+      return dates;
+    }
+
+    function renderSelectionGrid() {
+      const dates = getRoomDates();
       const headerRow = document.getElementById('grid-header-row');
       const bodyRows = document.getElementById('grid-body-rows');
+      const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
-      let hHtml = '<th>시간</th>';
+      let hHtml = `<th>시간</th>`;
       dates.forEach(d => {
-        hHtml += `<th>${d.getMonth()+1}/${d.getDate()}</th>`;
+        const m = d.getMonth() + 1;
+        const dateNum = d.getDate();
+        const dayIdx = d.getDay();
+        const dayClass = dayIdx === 6 ? 'day-sat' : (dayIdx === 0 ? 'day-sun' : '');
+
+        hHtml += `
+          <th>
+            <div class="date-num">${m}/${dateNum}</div>
+            <div class="day-str ${dayClass}">(${daysOfWeek[dayIdx]})</div>
+          </th>`;
       });
       headerRow.innerHTML = hHtml;
 
       let bHtml = '';
+
       for (let h = START_HOUR; h < END_HOUR; h++) {
-        bHtml += `<tr><th>${h}:00</th>`;
+        const timeStr = `${String(h).padStart(2, '0')}:00`;
+        bHtml += `<tr><th>${timeStr}</th>`;
+
         dates.forEach(d => {
           const dateKey = formatDateStr(d);
           const slotId = `${dateKey}_${h}`;
           const isSelected = selectedSlots.has(slotId);
-          bHtml += `<td class="slot-cell ${isSelected ? 'selected' : ''}">${isSelected ? '가능' : '-'}</td>`;
+
+          bHtml += `<td class="slot-cell ${isSelected ? 'selected' : ''}" 
+                        data-date="${dateKey}"
+                        data-hour="${h}"
+                        onmousedown="onSlotMouseDown('${dateKey}', ${h})"
+                        onmouseenter="onSlotMouseEnter('${dateKey}', ${h})"
+                        onclick="onSlotClick('${dateKey}', ${h})">-</td>`;
         });
-        bHtml += '</tr>';
+        bHtml += `</tr>`;
       }
       bodyRows.innerHTML = bHtml;
     }
 
-    // 요청하신 파싱 규칙 완벽 적용
+    function onSlotMouseDown(dateKey, hour) {
+      isMouseDown = true;
+      const slotId = `${dateKey}_${hour}`;
+      dragModeSelect = !selectedSlots.has(slotId);
+
+      if (dragModeSelect) {
+        selectedSlots.add(slotId);
+      } else {
+        selectedSlots.delete(slotId);
+      }
+      renderSelectionGrid();
+    }
+
+    function onSlotMouseEnter(dateKey, hour) {
+      if (!isMouseDown) return;
+      const slotId = `${dateKey}_${hour}`;
+      
+      if (dragModeSelect) {
+        selectedSlots.add(slotId);
+      } else {
+        selectedSlots.delete(slotId);
+      }
+      renderSelectionGrid();
+    }
+
+    function onSlotClick(dateKey, hour) {
+      const slotId = `${dateKey}_${hour}`;
+
+      if (rangeStartSlot === null || rangeStartSlot.dateKey !== dateKey) {
+        rangeStartSlot = { dateKey, hour };
+      } else {
+        const minH = Math.min(rangeStartSlot.hour, hour);
+        const maxH = Math.max(rangeStartSlot.hour, hour);
+
+        for (let h = minH; h <= maxH; h++) {
+          selectedSlots.add(`${dateKey}_${h}`);
+        }
+        rangeStartSlot = null;
+        renderSelectionGrid();
+      }
+    }
+
+    function switchInputMode(mode) {
+      document.getElementById('tab-btn-grid').classList.toggle('active', mode === 'grid');
+      document.getElementById('tab-btn-text').classList.toggle('active', mode === 'text');
+      document.getElementById('input-mode-grid').classList.toggle('hidden', mode !== 'grid');
+      document.getElementById('input-mode-text').classList.toggle('hidden', mode !== 'text');
+    }
+
+    // 텍스트 파싱 처리 알고리즘
     function parseTextToGrid() {
       const text = document.getElementById('text-schedule-input').value;
       const lines = text.split('\n');
-      const dates = getDates();
+      const dates = getRoomDates();
+      let appliedCount = 0;
 
       lines.forEach(line => {
         const trimmed = line.trim();
@@ -239,6 +742,7 @@
         if (!targetDateObj) return;
 
         const dateKey = formatDateStr(targetDateObj);
+        appliedCount++;
 
         // 1) 23: o (전체 가능)
         if (/^(o|O|전체|가능)$/i.test(ruleStr)) {
@@ -248,8 +752,8 @@
           return;
         }
 
-        // 2) 13~15 x (특정 시간만 제외)
-        const isExclusion = ruleStr.includes('x') || ruleStr.includes('제외');
+        // 2) 13~15 x (특정 시간대 제외)
+        const isExclusion = ruleStr.includes('x') || ruleStr.includes('제외') || ruleStr.includes('안됨');
         if (isExclusion) {
           for (let h = START_HOUR; h < END_HOUR; h++) {
             selectedSlots.add(`${dateKey}_${h}`);
@@ -270,37 +774,167 @@
         tokens.forEach(token => {
           if (!token) return;
 
-          // ~11 (11시 이전)
+          // ~11
           if (/^[~\-]\d{1,2}$/.test(token)) {
             const endH = parseInt(token.replace(/[~\-]/, ''));
             for (let h = START_HOUR; h < endH; h++) {
               selectedSlots.add(`${dateKey}_${h}`);
             }
           }
-          // 17~ (17시 이후)
+          // 17~
           else if (/^\d{1,2}[~\-]$/.test(token)) {
             const startH = parseInt(token.replace(/[~\-]/, ''));
             for (let h = startH; h < END_HOUR; h++) {
               selectedSlots.add(`${dateKey}_${h}`);
             }
           }
-          // 12~13 (구간 지정)
+          // 12~13
           else if (/^\d{1,2}[~\-]\d{1,2}$/.test(token)) {
             const parts = token.split(/[~\-]/);
             const startH = parseInt(parts[0]);
             const endH = parseInt(parts[1]);
             for (let h = startH; h < endH; h++) {
-              selectedSlots.add(`${dateKey}_${h}`);
+              if (h >= START_HOUR && h < END_HOUR) {
+                selectedSlots.add(`${dateKey}_${h}`);
+              }
             }
           }
         });
       });
 
-      renderGrid();
-      alert('텍스트 규칙이 적용되어 시간표가 변경되었습니다.');
+      switchInputMode('grid');
+      renderSelectionGrid();
+      if (appliedCount > 0) {
+        alert(`${appliedCount}개 날짜의 입력이 정확히 반영되었습니다.`);
+      } else {
+        alert('일치하는 날짜를 찾지 못했습니다. 날짜 형식을 확인해주세요.');
+      }
     }
 
-    renderGrid();
+    function submitMySchedule() {
+      const name = document.getElementById('user-name').value.trim();
+      const session = document.getElementById('user-session').value;
+
+      if (!name) return alert('이름을 입력해주세요.');
+
+      const memberId = name + '_' + session;
+      if (!roomData.members) roomData.members = {};
+
+      roomData.members[memberId] = {
+        name: name,
+        session: session,
+        slots: Array.from(selectedSlots)
+      };
+
+      localStorage.setItem('room_' + currentRoomCode, JSON.stringify(roomData));
+      alert(`${name}님의 가능 시간이 정상적으로 저장되었습니다!`);
+      renderHeatmapAndVotes();
+    }
+
+    function renderHeatmapAndVotes() {
+      const dates = getRoomDates();
+      const members = roomData.members || {};
+      const votes = roomData.votes || {};
+      const memberKeys = Object.keys(members);
+
+      const tagContainer = document.getElementById('submitted-members-tags');
+      if (memberKeys.length === 0) {
+        tagContainer.innerHTML = `<span style="font-size:13px; color:var(--ios-gray);">아직 입력한 팀원이 없습니다.</span>`;
+      } else {
+        tagContainer.innerHTML = memberKeys.map(k => {
+          const m = members[k];
+          return `<span class="badge-session">${m.session} ${m.name}</span>`;
+        }).join(' ');
+      }
+
+      const slotCounts = {};
+      memberKeys.forEach(k => {
+        const mSlots = members[k].slots || [];
+        mSlots.forEach(s => {
+          slotCounts[s] = (slotCounts[s] || 0) + 1;
+        });
+      });
+
+      const hHeaderRow = document.getElementById('heatmap-header-row');
+      const hBodyRows = document.getElementById('heatmap-body-rows');
+      const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+      let hHtml = `<th>시간</th>`;
+      dates.forEach(d => {
+        const m = d.getMonth() + 1;
+        const dateNum = d.getDate();
+        const dayIdx = d.getDay();
+        const dayClass = dayIdx === 6 ? 'day-sat' : (dayIdx === 0 ? 'day-sun' : '');
+        hHtml += `<th><div class="date-num">${m}/${dateNum}</div><div class="day-str ${dayClass}">(${daysOfWeek[dayIdx]})</div></th>`;
+      });
+      hHeaderRow.innerHTML = hHtml;
+
+      let bHtml = '';
+      for (let h = START_HOUR; h < END_HOUR; h++) {
+        const timeStr = `${String(h).padStart(2, '0')}:00`;
+        bHtml += `<tr><th>${timeStr}</th>`;
+
+        dates.forEach(d => {
+          const dateKey = formatDateStr(d);
+          const slotId = `${dateKey}_${h}`;
+          const count = slotCounts[slotId] || 0;
+          const heatClass = `heat-${Math.min(count, 5)}`;
+
+          bHtml += `<td class="${heatClass}">${count > 0 ? count + '명' : '-'}</td>`;
+        });
+        bHtml += `</tr>`;
+      }
+      bHtml += '';
+      hBodyRows.innerHTML = bHtml;
+
+      const candidateContainer = document.getElementById('candidate-vote-list');
+      const maxAvailable = memberKeys.length;
+
+      if (maxAvailable === 0) {
+        candidateContainer.innerHTML = `<div style="font-size:13px; color:var(--ios-gray);">팀원들의 시간 제출을 기다리는 중입니다.</div>`;
+        return;
+      }
+
+      let candidates = Object.keys(slotCounts).filter(s => slotCounts[s] >= Math.max(1, maxAvailable - 1));
+
+      if (candidates.length === 0) {
+        candidateContainer.innerHTML = `<div style="font-size:13px; color:var(--ios-gray);">모든 인원이 동시에 가능한 시간이 아직 없습니다.</div>`;
+        return;
+      }
+
+      let voteHtml = '';
+      candidates.slice(0, 5).forEach(slotId => {
+        const [dStr, hStr] = slotId.split('_');
+        const count = slotCounts[slotId];
+        const voteCount = votes[slotId] || 0;
+
+        voteHtml += `
+          <div class="vote-card">
+            <div class="vote-info">
+              <div class="vote-time">${dStr} ${hStr}:00 ~ ${parseInt(hStr)+1}:00</div>
+              <div class="vote-meta">가능 인원: ${count}명 / ${maxAvailable}명</div>
+            </div>
+            <button class="vote-btn" onclick="castVote('${slotId}')">
+              👍 선호해요 (${voteCount})
+            </button>
+          </div>`;
+      });
+      candidateContainer.innerHTML = voteHtml;
+    }
+
+    function castVote(slotId) {
+      if (!roomData.votes) roomData.votes = {};
+      roomData.votes[slotId] = (roomData.votes[slotId] || 0) + 1;
+      localStorage.setItem('room_' + currentRoomCode, JSON.stringify(roomData));
+      renderHeatmapAndVotes();
+    }
+
+    function copyRoomLink() {
+      const shareUrl = `${window.location.origin}${window.location.pathname}?code=${currentRoomCode}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert(`합주방 링크가 복사되었습니다!\n팀원들에게 공유하세요:\n${shareUrl}`);
+      });
+    }
   </script>
 </body>
 </html>
