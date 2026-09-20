@@ -43,7 +43,6 @@
       padding-bottom: 40px;
     }
 
-    /* iOS Glassmorphism Header */
     header {
       position: sticky;
       top: 0;
@@ -122,7 +121,6 @@
       margin-bottom: 16px;
     }
 
-    /* Game Lobby Screen */
     .lobby-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -146,11 +144,6 @@
 
     .lobby-btn-card:active {
       transform: scale(0.97);
-    }
-
-    .lobby-btn-card.active {
-      border-color: var(--ios-blue);
-      background: #f0f7ff;
     }
 
     .lobby-icon {
@@ -254,7 +247,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
-    /* Grid Table */
     .grid-container {
       overflow-x: auto;
       max-width: 100%;
@@ -364,7 +356,6 @@
       color: #3a3a3c;
     }
 
-    /* Heatmap */
     .heat-0 { background: #ffffff; }
     .heat-1 { background: #e5f1ff; }
     .heat-2 { background: #b3d7ff; }
@@ -377,7 +368,6 @@
 </head>
 <body>
 
-  <!-- Header Navigation -->
   <header>
     <div class="brand" onclick="goLobby()">
       <div class="brand-icon">🎸</div>
@@ -407,7 +397,6 @@
         </div>
       </div>
 
-      <!-- 방 만들기 폼 -->
       <div id="form-create" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
         <label>밴드 / 방 이름</label>
         <input type="text" id="create-title" placeholder="예: 스프링 밴드 합주" value="스프링 밴드 합주">
@@ -426,14 +415,12 @@
         <button class="ios-btn" onclick="createRoomAction()">합주방 생성 및 입장</button>
       </div>
 
-      <!-- 코드 입력 폼 -->
       <div id="form-join" class="hidden" style="margin-top:20px; border-top:1px solid var(--ios-border); padding-top:20px;">
         <label>6자리 방 코드</label>
         <input type="text" id="join-code-input" placeholder="예: BAND01" style="text-transform:uppercase; font-size:18px; letter-spacing:2px; font-weight:700;">
         <button class="ios-btn" onclick="joinRoomAction()">방으로 입장하기</button>
       </div>
     </div>
-
 
     <!-- MAIN ROOM VIEW -->
     <div id="view-room" class="hidden">
@@ -446,7 +433,6 @@
         <button class="ios-btn ios-btn-secondary" style="width:auto; padding:8px 14px; font-size:13px;" onclick="copyRoomLink()">링크 공유 🔗</button>
       </div>
 
-      <!-- 내 가능 시간 입력 -->
       <div class="ios-card">
         <h3 class="ios-title" style="font-size:17px;">내 가능 시간 입력</h3>
         
@@ -496,15 +482,12 @@
         <button class="ios-btn" style="margin-top:16px;" onclick="submitMySchedule()">내 시간 저장 / 업데이트</button>
       </div>
 
-      <!-- 추천 시간 & 투표 -->
       <div class="ios-card">
         <h3 class="ios-title" style="font-size:18px;">추천 합주 시간 & 선호도 투표</h3>
         <div class="ios-sub">모두(또는 많은 멤버)가 가능한 시간을 계산합니다.</div>
-
         <div id="candidate-vote-list"></div>
       </div>
 
-      <!-- 전체 현황 표 -->
       <div class="ios-card">
         <h3 class="ios-title" style="font-size:18px;">전체 팀원 시간 현황표</h3>
         <div id="submitted-members-tags" style="margin-bottom:12px;"></div>
@@ -526,8 +509,8 @@
     let roomData = null;
     let selectedSlots = new Set();
     let isMouseDown = false;
-    let dragModeSelect = true; // true = 채우기, false = 지우기
-    let rangeStartSlot = null; // { dateKey, hour }
+    let dragModeSelect = true;
+    let rangeStartSlot = null;
 
     const START_HOUR = 0;
     const END_HOUR = 24;
@@ -546,7 +529,6 @@
         joinRoomByCode(code.toUpperCase());
       }
 
-      // 글로벌 마우스 업 이벤트 (드래그 종료)
       window.addEventListener('mouseup', () => { isMouseDown = false; });
       window.addEventListener('touchend', () => { isMouseDown = false; });
     });
@@ -686,7 +668,6 @@
       bodyRows.innerHTML = bHtml;
     }
 
-    /* 완벽 세로 방향 전용 선택 및 드래그 로직 */
     function onSlotMouseDown(dateKey, hour) {
       isMouseDown = true;
       const slotId = `${dateKey}_${hour}`;
@@ -716,17 +697,15 @@
       const slotId = `${dateKey}_${hour}`;
 
       if (rangeStartSlot === null || rangeStartSlot.dateKey !== dateKey) {
-        // 단일 클릭 또는 새로운 날짜 열 클릭
         rangeStartSlot = { dateKey, hour };
       } else {
-        // 같은 날짜 열 안에서 시작시간~끝시간 세로 자동 연결
         const minH = Math.min(rangeStartSlot.hour, hour);
         const maxH = Math.max(rangeStartSlot.hour, hour);
 
         for (let h = minH; h <= maxH; h++) {
           selectedSlots.add(`${dateKey}_${h}`);
         }
-        rangeStartSlot = null; // 구간 연동 완료 후 초기화
+        rangeStartSlot = null;
         renderSelectionGrid();
       }
     }
