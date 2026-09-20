@@ -276,6 +276,7 @@
       min-width: 48px;
       height: 38px;
       user-select: none;
+      -webkit-user-select: none;
     }
 
     table.time-grid th {
@@ -475,8 +476,8 @@
         </div>
 
         <div id="input-mode-grid">
-          <div style="font-size:12px; color:var(--ios-gray); margin-bottom:8px;">
-            * 같은 날짜에서 시작 시간과 끝 시간을 터치하면 세로 구간이 한 번에 선택됩니다.
+          <div style="font-size:12px; color:var(--ios-blue); font-weight:600; margin-bottom:8px;">
+            💡 같은 날짜 열(세로)에서 누른 상태로 쓱 문지르거나, 시작 시간과 끝 시간을 터치하면 세로로 연결됩니다.
           </div>
           <div class="grid-container">
             <table class="time-grid" id="selection-grid">
@@ -524,8 +525,9 @@
     let currentRoomCode = "";
     let roomData = null;
     let selectedSlots = new Set();
+    let isMouseDown = false;
+    let dragModeSelect = true; // true = 채우기, false = 지우기
     let rangeStartSlot = null; // { dateKey, hour }
-    let currentInputMode = "grid";
 
     const START_HOUR = 0;
     const END_HOUR = 24;
@@ -543,6 +545,10 @@
       if (code) {
         joinRoomByCode(code.toUpperCase());
       }
+
+      // 글로벌 마우스 업 이벤트 (드래그 종료)
+      window.addEventListener('mouseup', () => { isMouseDown = false; });
+      window.addEventListener('touchend', () => { isMouseDown = false; });
     });
 
     function formatDateStr(d) {
@@ -671,40 +677,61 @@
           bHtml += `<td class="slot-cell ${isSelected ? 'selected' : ''}" 
                         data-date="${dateKey}"
                         data-hour="${h}"
-                        onclick="handleSlotClick('${dateKey}', ${h})">-</td>`;
+                        onmousedown="onSlotMouseDown('${dateKey}', ${h})"
+                        onmouseenter="onSlotMouseEnter('${dateKey}', ${h})"
+                        onclick="onSlotClick('${dateKey}', ${h})">-</td>`;
         });
         bHtml += `</tr>`;
       }
       bodyRows.innerHTML = bHtml;
     }
 
-    /* 세로(시간) 연결 방식 클릭 핸들러 */
-    function handleSlotClick(dateKey, hour) {
+    /* 완벽 세로 방향 전용 선택 및 드래그 로직 */
+    function onSlotMouseDown(dateKey, hour) {
+      isMouseDown = true;
       const slotId = `${dateKey}_${hour}`;
+      dragModeSelect = !selectedSlots.has(slotId);
 
-      if (rangeStartSlot === null || rangeStartSlot.dateKey !== dateKey) {
-        // 첫 번째 클릭이거나 다른 날짜를 클릭한 경우
-        rangeStartSlot = { dateKey, hour };
-        if (selectedSlots.has(slotId)) {
-          selectedSlots.delete(slotId);
-        } else {
-          selectedSlots.add(slotId);
-        }
+      if (dragModeSelect) {
+        selectedSlots.add(slotId);
       } else {
-        // 같은 날짜 내에서 두 번째 클릭으로 세로 범위 선택
-        const minHour = Math.min(rangeStartSlot.hour, hour);
-        const maxHour = Math.max(rangeStartSlot.hour, hour);
-
-        for (let h = minHour; h <= maxHour; h++) {
-          selectedSlots.add(`${dateKey}_${h}`);
-        }
-        rangeStartSlot = null; // 범위 입력 완료 후 초기화
+        selectedSlots.delete(slotId);
       }
       renderSelectionGrid();
     }
 
+    function onSlotMouseEnter(dateKey, hour) {
+      if (!isMouseDown) return;
+      const slotId = `${dateKey}_${hour}`;
+      
+      if (dragModeSelect) {
+        selectedSlots.add(slotId);
+      } else {
+        selectedSlots.delete(slotId);
+      }
+      renderSelectionGrid();
+    }
+
+    function onSlotClick(dateKey, hour) {
+      const slotId = `${dateKey}_${hour}`;
+
+      if (rangeStartSlot === null || rangeStartSlot.dateKey !== dateKey) {
+        // 단일 클릭 또는 새로운 날짜 열 클릭
+        rangeStartSlot = { dateKey, hour };
+      } else {
+        // 같은 날짜 열 안에서 시작시간~끝시간 세로 자동 연결
+        const minH = Math.min(rangeStartSlot.hour, hour);
+        const maxH = Math.max(rangeStartSlot.hour, hour);
+
+        for (let h = minH; h <= maxH; h++) {
+          selectedSlots.add(`${dateKey}_${h}`);
+        }
+        rangeStartSlot = null; // 구간 연동 완료 후 초기화
+        renderSelectionGrid();
+      }
+    }
+
     function switchInputMode(mode) {
-      currentInputMode = mode;
       document.getElementById('tab-btn-grid').classList.toggle('active', mode === 'grid');
       document.getElementById('tab-btn-text').classList.toggle('active', mode === 'text');
       document.getElementById('input-mode-grid').classList.toggle('hidden', mode !== 'grid');
