@@ -331,7 +331,7 @@
         </div>
         <div class="lobby-btn-card" id="btn-card-join" onclick="showLobbyMode('join')">
           <div class="lobby-icon">🔑</div>
-          <div style="font-weight:700;">입장하기</div>
+          <div style="font-size:12px; color:var(--ios-gray);">입장하기</div>
           <div style="font-size:12px; color:var(--ios-gray);">코드 입력하기</div>
         </div>
       </div>
@@ -417,6 +417,7 @@
         <div id="input-mode-text" class="hidden">
           <label>가능 시간 텍스트 입력</label>
           <textarea id="text-schedule-input" rows="8" placeholder="입력 예시:
+22: x
 23: o
 24: 13~15 x
 25: ~11 12~13 17~"></textarea>
@@ -672,6 +673,7 @@
         const trimmed = line.trim();
         if (!trimmed) return;
 
+        // 날짜 숫자 추출 (예: "22:", "23일", "24 :")
         const dateMatch = trimmed.match(/^(\d{1,2})(?:일)?\s*[:\-]?\s*(.*)$/i);
         if (!dateMatch) return;
 
@@ -684,6 +686,15 @@
         const dateKey = formatDateStr(targetDateObj);
         appliedCount++;
 
+        // 1. 해당 날짜 전체 불가능한 경우 (예: "22: x", "22: 불가", "22: 안됨")
+        if (/^(x|X|불가|안됨|아예안됨)$/i.test(ruleStr)) {
+          for (let h = START_HOUR; h < END_HOUR; h++) {
+            selectedSlots.delete(`${dateKey}_${h}`);
+          }
+          return;
+        }
+
+        // 2. 해당 날짜 전체 가능한 경우 (예: "23: o", "23: 전체", "23: 가능")
         if (/^(o|O|전체|가능)$/i.test(ruleStr)) {
           for (let h = START_HOUR; h < END_HOUR; h++) {
             selectedSlots.add(`${dateKey}_${h}`);
@@ -691,6 +702,7 @@
           return;
         }
 
+        // 3. 특정 시간만 제외하는 경우 (예: "24: 13~15 x" -> 13~15시 제외하고 나머지 전체 가능)
         const isExclusion = ruleStr.includes('x') || ruleStr.includes('제외') || ruleStr.includes('안됨');
         if (isExclusion) {
           for (let h = START_HOUR; h < END_HOUR; h++) {
@@ -707,6 +719,7 @@
           return;
         }
 
+        // 4. 특정 가능 시간대만 적어둔 경우 (예: "25: ~11 12~13 17~")
         const tokens = ruleStr.split(/[\s,]+/);
         tokens.forEach(token => {
           if (!token) return;
